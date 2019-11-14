@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">bottom</string>
+    <string name="title_home">홈</string>
+    <string name="title_like">관심목록</string>
+    <string name="title_map">지도</string>
+    <string name="title_guide">활동가이드</string>
+    <string name="title_etc">더보기</string>
+</resources>
