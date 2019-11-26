@@ -31,13 +31,14 @@ public class MapFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_map, container, false);
         //final TextView textView = root.findViewById(R.id.text_map);
 
+        /*
         mapViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 //textView.setText(s);
             }
         });
-
+*/
         mapListView = root.findViewById(R.id.map_list);
 
         listSetting();
@@ -48,6 +49,14 @@ public class MapFragment extends Fragment {
     private void listSetting(){
         ListItemAdapter listItemAdapter = new ListItemAdapter();
 
+        listItemAdapter.addItem(getResources().getDrawable(R.drawable.ic_alarm),"ddd","sadf",getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm));
+        listItemAdapter.addItem(getResources().getDrawable(R.drawable.ic_alarm),"ddd","sadf",getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm));
+        listItemAdapter.addItem(getResources().getDrawable(R.drawable.ic_alarm),"ddd","sadf",getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm));
+        listItemAdapter.addItem(getResources().getDrawable(R.drawable.ic_alarm),"ddd","sadf",getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm));
+        listItemAdapter.addItem(getResources().getDrawable(R.drawable.ic_alarm),"ddd","sadf",getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm));
+        listItemAdapter.addItem(getResources().getDrawable(R.drawable.ic_alarm),"ddd","sadf",getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm));
+        listItemAdapter.addItem(getResources().getDrawable(R.drawable.ic_alarm),"ddd","sadf",getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm));
+        listItemAdapter.addItem(getResources().getDrawable(R.drawable.ic_alarm),"ddd","sadf",getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm));
         listItemAdapter.addItem(getResources().getDrawable(R.drawable.ic_alarm),"ddd","sadf",getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm),getResources().getDrawable(R.drawable.ic_alarm));
         mapListView.setAdapter(listItemAdapter);
     }
