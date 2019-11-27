@@ -32,8 +32,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        mapViewModel =
-                ViewModelProviders.of(this).get(MapViewModel.class);
+        //mapViewModel =                ViewModelProviders.of(this).get(MapViewModel.class);
+
+
         View root = inflater.inflate(R.layout.fragment_map, container, false);
         mapListView = root.findViewById(R.id.map_list);
 
