@@ -7,15 +7,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends Activity {
 
-    private EditText id;
+    private EditText email;
     private EditText pw;
     private Button submit;
     private TextView register;
@@ -33,7 +38,7 @@ public class LoginActivity extends Activity {
         register=findViewById(R.id.login_register);
         findId=findViewById(R.id.login_find_id);
         findPw=findViewById(R.id.login_find_pw);
-        id=findViewById(R.id.login_id);
+        email=findViewById(R.id.login_email);
         pw=findViewById(R.id.login_pw);
         submit=findViewById(R.id.login_submit);
 
@@ -54,10 +59,28 @@ public class LoginActivity extends Activity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                id.getText();
-                pw.getText();
 
                 //TODO : 로그인 구현
+                mAuth.signInWithEmailAndPassword( email.getText().toString(), pw.getText().toString())
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+
+                                // ...
+                            }
+                        });
                 //디비 확인 쏘기
             }
         });
