@@ -4,14 +4,14 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/register2"
+        android:id="@+id/id_find_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="ID 찾기"
         android:textSize="40dp" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/id_find_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -20,7 +20,7 @@
         android:hint="이름 입력"/>
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/id_find_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -28,10 +28,11 @@
         android:hint="E-mail 입력"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/id_find_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="다   음"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="50dp"
+        android:onClick="nextid"/>
 </LinearLayout>

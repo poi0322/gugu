@@ -23,9 +23,9 @@ public class LoginActivity extends Activity {
     private EditText email;
     private EditText pw;
     private Button submit;
-    private TextView register;
-    private TextView findId;
-    private TextView findPw;
+    private Button register;
+    private Button findId;
+    private Button findPw;
 
     private FirebaseAuth mAuth;
 
@@ -85,6 +85,8 @@ public class LoginActivity extends Activity {
             }
         });
     }
+
+
     //핸들러 추가
     private void addHandler(){
         register.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +96,14 @@ public class LoginActivity extends Activity {
                 startActivity(intent);
             }
         });
-
-
     }
+    public void findid(View view){
+        Intent intent = new Intent(getApplicationContext(),FindIdActivity.class);
+        startActivity(intent);
+    }
+    public void findpw(View view){
+        Intent intent = new Intent(getApplicationContext(),FindPwActivity.class);
+        startActivity(intent);
+    }
+
 }
