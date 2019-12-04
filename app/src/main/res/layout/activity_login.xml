@@ -7,75 +7,64 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="380dp"
-        android:layout_height="200dp"
+        android:id="@+id/login_idtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_text"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text=" 활동구구"
-        android:textSize="90dp"
-        android:typeface="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
+
+
+        android:text="I D"
+        android:textSize="40dp"
+        app:layout_constraintHorizontal_bias="0.109"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.374" />
+        app:layout_constraintTop_toBottomOf="@+id/login_text" />
 
-    <EditText
-        android:id="@+id/login_email"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="9dp"
-
-        android:hint="ID"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
-
-
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:ignore="MissingConstraints" />
+    <Button
+        android:id="@+id/login_submit"
+        android:layout_width="75dp"
+        android:layout_height="101dp"
+        android:text="login"
+        app:layout_constraintStart_toEndOf="@+id/login_email"
+        app:layout_constraintTop_toBottomOf="@+id/login_text" />
 
     <EditText
         android:id="@+id/login_pw"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-
-        android:layout_marginTop="8dp"
+        android:textSize="25dp"
         android:hint="PW"
 
 
-        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/login_pwtext"
         app:layout_constraintTop_toBottomOf="@+id/login_email"
         tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/login_email"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView2"
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:hint="ID"
 
 
-        android:text="I D"
-        android:textSize="40dp"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView2" />
+        android:textSize="25dp"
+        app:layout_constraintStart_toEndOf="@+id/login_idtext"
+        app:layout_constraintTop_toBottomOf="@+id/login_text"
+        tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/login_pwtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginStart="36dp"
         android:text="PW"
         android:textSize="40dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/login_idtext" />
 
     <Button
         android:id="@+id/login_register"
@@ -91,10 +80,10 @@
         android:id="@+id/login_find_id"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="148dp"
         android:layout_marginTop="560dp"
+        android:onClick="findid"
         android:text="아이디찾기"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/login_register"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -102,19 +91,29 @@
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="560dp"
+        android:inputType="textEmailAddress"
+        android:onClick="findpw"
         android:text="비밀번호찾기"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.857"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/login_find_id"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/login_submit"
-        android:layout_width="75dp"
-        android:layout_height="101dp"
-        android:layout_marginTop="8dp"
-        android:text="login"
-        app:layout_constraintStart_toEndOf="@+id/login_email"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+    <TextView
+        android:id="@+id/login_text"
+        android:layout_width="380dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text=" 활동구구"
+        android:textSize="90dp"
+        android:typeface="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.374"
+        android:inputType="textEmailAddress"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
