@@ -43,7 +43,7 @@
         <activity android:name=".ViewIdActivity"></activity>
         <activity android:name=".ViewPwActivity"></activity>
 
-
+        <activity android:name="com.example.gugu.ui.write.WriteMomActivity"></activity>
 
         <activity
             android:name="com.example.gugu.MainActivity"

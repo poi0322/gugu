@@ -7,6 +7,8 @@ import android.os.Handler;
 
 import androidx.annotation.Nullable;
 
+import com.example.gugu.ui.write.WriteMomActivity;
+
 public class InitActivity extends Activity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -16,7 +18,7 @@ public class InitActivity extends Activity{
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), WriteMomActivity.class);
                 startActivity(intent);
                 finish();
             }
