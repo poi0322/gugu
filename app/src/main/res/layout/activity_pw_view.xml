@@ -4,14 +4,14 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/register4"
+        android:id="@+id/pw_find_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="비밀번호 찾기"
         android:textSize="40dp" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/pw_view_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="250dp"
@@ -19,17 +19,18 @@
         android:textSize="25dp" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/pw_view_pw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/pw_view_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="완   료"
         android:layout_marginTop="50dp"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:onClick="finishpwfind"/>
 </LinearLayout>

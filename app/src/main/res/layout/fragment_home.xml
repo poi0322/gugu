@@ -14,36 +14,18 @@
         android:textSize="50dp" />
 
     <TextView
+        android:id="@+id/home_notice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="공지사항"
-        android:textSize="20dp"
-        android:layout_marginTop="10dp"/>
+        android:textSize="20dp" />
 
-    <ImageView
-        android:id="@+id/imageView6"
+
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:srcCompat="@tools:sample/avatars"
-        android:layout_marginTop="10dp"/>
-
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:srcCompat="@tools:sample/avatars"
-        android:layout_marginTop="20dp"/>
-
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:id="@+id/notice_list"
+        ></ListView>
 
 </LinearLayout>
