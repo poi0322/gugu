@@ -7,6 +7,7 @@ import android.os.Handler;
 
 import androidx.annotation.Nullable;
 
+import com.example.gugu.R;
 import com.example.gugu.ui.write.WriteMomActivity;
 
 public class InitActivity extends Activity{

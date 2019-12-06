@@ -15,13 +15,9 @@ public class MapListItem {
         return listImage;
     }
 
-    public void setListImage(Drawable listImage) {
-        this.listImage = listImage;
-    }
+    public void setListImage(Drawable listImage) { this.listImage = listImage; }
 
-    public String getListTitle() {
-        return listTitle;
-    }
+    public String getListTitle() { return listTitle; }
 
     public void setListTitle(String listTitle) {
         this.listTitle = listTitle;
