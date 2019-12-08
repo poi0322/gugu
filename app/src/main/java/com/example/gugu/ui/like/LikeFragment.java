@@ -129,8 +129,9 @@ public class LikeFragment extends Fragment {
         SharedPreferences pref = getActivity().getSharedPreferences("like",MODE_PRIVATE);
         Set<String> helper;
         helper = pref.getStringSet("helper",new HashSet<String>());
-        Set<String> mom;
-        mom = pref.getStringSet("mom",new HashSet<String>());
+        //Set<String> mom;
+        //mom = pref.getStringSet("mom",new HashSet<String>());
+
 
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
