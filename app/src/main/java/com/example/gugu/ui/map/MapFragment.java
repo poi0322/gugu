@@ -204,7 +204,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void listSetting() {
 
         mapListView.setOnItemClickListener((parent, view, position, id) -> {
-            Toast.makeText(getContext(),position+"" , Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), listItemAdapter.getItem(position).getKey() , Toast.LENGTH_LONG).show();
         });
         mapListView.setAdapter(listItemAdapter);
     }
@@ -228,21 +228,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     int profile = R.drawable.no_profile;
+    String key;
     String title;
     int active;
     int bath;
     int toilet;
     int clean;
+    String service;
 
 
     private void realAddItem(
+            String key,
             String title,
             String uid,
             String service
     ) {
 
+
         this.profile = R.drawable.no_profile;
         this.title = "제목 : " + title;
+        this.key = key;
+        this.service = service;
 
         if ((Integer.valueOf(service, 2) & 8) == 8) {
             active = R.drawable.ic_active_sup_black;
@@ -279,12 +285,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 int iage = Integer.parseInt(sdf.format(date)) / 10000 -
                         Integer.parseInt(u.getUserBirth()) / 10000;
                 detail = "이름 : " + u.getUserName() + " / 성별 : " + u.getUserSex() + " / 나이 : " + "만 " + iage + "세";
-                listItemAdapter.addItem(getResources().getDrawable(profile),
-                        title, detail,
-                        getResources().getDrawable(active),
-                        getResources().getDrawable(bath),
-                        getResources().getDrawable(toilet),
-                        getResources().getDrawable(clean));
+                listItemAdapter.addItem(key,getResources().getDrawable(profile),
+                        title, detail,service);
                 listSetting();
 
             }
@@ -352,12 +354,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     for (DataSnapshot board : dataSnapshot.getChildren()) {
 
                         //파이어베이스에서 읽어온값들을 공유변수에 저장
+                        board.getKey();
                         Write w = board.getValue(Write.class);
                         Location lo2 = new Location("lo2");
                         lo2.setLatitude(w.getLatitude());
                         lo2.setLongitude(w.getLongitude());
                         if (lo1.distanceTo(lo2) / 1000 < 1) {
-                            realAddItem(w.getTitle(), w.getUid(), w.getService());
+                            realAddItem(board.getKey(),w.getTitle(), w.getUid(), w.getService());
                             m.add(googleMap.addMarker(new MarkerOptions().position(new LatLng(w.getLatitude(), w.getLongitude())).title(w.getTitle())));
                         }
                     }
@@ -383,7 +386,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         .fillColor(Color.parseColor("#7ae1f5fe"))); //배경색);
 
 
-                m.add(googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(address)));
+                //m.add(googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(address)));
             } catch (IOException | IndexOutOfBoundsException ioException) {
                 //네트워크 문제
                 Toast.makeText(getContext(), "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
