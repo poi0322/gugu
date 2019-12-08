@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class ReadHelperActivity extends Activity implements OnMapReadyCallback {
+public class ReadMomActivity extends Activity implements OnMapReadyCallback {
 
     private String key;
 
@@ -72,7 +72,7 @@ public class ReadHelperActivity extends Activity implements OnMapReadyCallback {
     private String service;
     private MapView map;
 
-    private Button helper_call;
+    private Button mom_call;
     private String phone;
 
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
@@ -95,29 +95,29 @@ public class ReadHelperActivity extends Activity implements OnMapReadyCallback {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.read_helper);
+        setContentView(R.layout.read_mom);
 
         Intent intent =getIntent();
         key= intent.getStringExtra("key");
 
 
-        title = findViewById(R.id.helper_title);
-        name = findViewById(R.id.helper_name);
+        title = findViewById(R.id.mom_title);
+        name = findViewById(R.id.mom_name);
 
-        location = findViewById(R.id.helper_location);
-        term = findViewById(R.id.helper_term);
-        sex = findViewById(R.id.helper_sex);
-        age = findViewById(R.id.helper_age);
+        location = findViewById(R.id.mom_location);
+        term = findViewById(R.id.mom_term);
+        sex = findViewById(R.id.mom_sex);
+        age = findViewById(R.id.mom_age);
 
         active = findViewById(R.id.active_sup);
         bath = findViewById(R.id.bath_sup);
         toilet = findViewById(R.id.toilet_sup);
         clean = findViewById(R.id.clean_sup);
 
-        body = findViewById(R.id.helper_body);
-        map = findViewById(R.id.helper_map);
+        body = findViewById(R.id.mom_body);
+        map = findViewById(R.id.mom_map);
 
-        helper_call = findViewById(R.id.helper_call);
+        mom_call = findViewById(R.id.mom_call);
 
 
         //맵 초기화 구문
@@ -134,7 +134,7 @@ public class ReadHelperActivity extends Activity implements OnMapReadyCallback {
 
 
         rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference boardRef = rootRef.child("board").child("helper").child(key);
+        DatabaseReference boardRef = rootRef.child("board").child("mom").child(key);
         boardRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -201,7 +201,7 @@ public class ReadHelperActivity extends Activity implements OnMapReadyCallback {
         map.getMapAsync(this);
 
 
-        helper_call.setOnClickListener(v -> {
+        mom_call.setOnClickListener(v -> {
             startActivity( new Intent("android.intent.action.DIAL", Uri.parse("tel:"+phone)));
 
         });
@@ -240,19 +240,19 @@ public class ReadHelperActivity extends Activity implements OnMapReadyCallback {
         googleMap.setMyLocationEnabled(true);
 
 
-            //이건 현재 좌표
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            String address = "";
-            try {
-                address = geocoder.getFromLocation(latitude, longitude, 1).get(0).getAddressLine(0);
-                location.setText(address);
-                m.add(googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(address)));
-            } catch (IOException | NullPointerException | IndexOutOfBoundsException ioException ) {
-                //네트워크 문제
-                Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
-            } catch (IllegalArgumentException illegalArgumentException) {
-                Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
-            }
+        //이건 현재 좌표
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        String address = "";
+        try {
+            address = geocoder.getFromLocation(latitude, longitude, 1).get(0).getAddressLine(0);
+            location.setText(address);
+            m.add(googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(address)));
+        } catch (IOException | NullPointerException | IndexOutOfBoundsException ioException ) {
+            //네트워크 문제
+            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+        }
 
 
         // Updates the location and zoom of the MapView

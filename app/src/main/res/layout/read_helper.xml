@@ -20,7 +20,7 @@
             >
 
             <LinearLayout
-                android:id="@+id/mom1"
+                android:id="@+id/helper1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -35,7 +35,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/mom_title"
+                        android:id="@+id/helper_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="원주 8년차 활동보조인 입니다"
@@ -43,7 +43,7 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/mom_name"
+                        android:id="@+id/helper_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="김영희" />
@@ -59,7 +59,7 @@
 
 
             <TableLayout
-                android:id="@+id/mom2"
+                android:id="@+id/helper2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -73,7 +73,7 @@
                     android:paddingBottom="8dp">
 
                     <TextView
-                        android:id="@+id/mom_info"
+                        android:id="@+id/helper_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="활동보조인 정보"
@@ -93,7 +93,7 @@
                         android:text="지역" />
 
                     <TextView
-                        android:id="@+id/mom_location"
+                        android:id="@+id/helper_location"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -115,7 +115,7 @@
                         android:text="장기/단기" />
 
                     <TextView
-                        android:id="@+id/mom_term"
+                        android:id="@+id/helper_term"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -137,7 +137,7 @@
                         android:text="성별" />
 
                     <TextView
-                        android:id="@+id/mom_sex"
+                        android:id="@+id/helper_sex"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -159,7 +159,7 @@
                         android:text="나이" />
 
                     <TextView
-                        android:id="@+id/mom_age"
+                        android:id="@+id/helper_age"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -170,7 +170,7 @@
             </TableLayout>
 
             <TableLayout
-                android:id="@+id/mom3"
+                android:id="@+id/helper3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -197,7 +197,7 @@
                     android:paddingBottom="8dp">
 
                     <TextView
-                        android:id="@+id/mom_body"
+                        android:id="@+id/helper_body"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
@@ -208,7 +208,7 @@
             </TableLayout>
 
             <TableLayout
-                android:id="@+id/mom4"
+                android:id="@+id/helper4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -310,7 +310,7 @@
             </TableLayout>
 
             <TableLayout
-                android:id="@+id/mom5"
+                android:id="@+id/helper5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -338,7 +338,7 @@
                     android:paddingTop="8dp">
 
                     <com.google.android.gms.maps.MapView
-                        android:id="@+id/mom_map"
+                        android:id="@+id/helper_map"
                         android:layout_width="0dp"
                         android:layout_height="210dp"
                         android:layout_weight="1"

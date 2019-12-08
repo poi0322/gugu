@@ -200,7 +200,7 @@ public class WriteHelperActivity extends Activity implements OnMapReadyCallback 
             name.setText(pref.getString("userName", ""));
             FirebaseUser user = mAuth.getCurrentUser();
             String uid = user.getUid();
-            DatabaseReference usersRef = rootRef.child("board");
+            DatabaseReference usersRef = rootRef.child("board").child("helper");
             usersRef.push().setValue(new Write(
                     "활동보조인", latitude, longitude,
                     term.getSelectedItem().toString(),

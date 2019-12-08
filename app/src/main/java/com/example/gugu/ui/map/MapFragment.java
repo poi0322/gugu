@@ -35,6 +35,8 @@ import com.example.gugu.DataClass.Write;
 import com.example.gugu.GPSInfo;
 import com.example.gugu.MainActivity;
 import com.example.gugu.R;
+import com.example.gugu.ui.read.ReadHelperActivity;
+import com.example.gugu.ui.read.ReadMomActivity;
 import com.example.gugu.ui.write.WriteHelperActivity;
 import com.example.gugu.ui.write.WriteMomActivity;
 import com.google.android.gms.maps.CameraUpdate;
@@ -152,6 +154,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mAuth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
 
+        //맵 퍼미션
+        if (!isPermission) {
+            callPermission();
+        }
+
+        //맵 초기화
+        map = root.findViewById(R.id.mapView);
+        map.onCreate(savedInstanceState);
+        map.onResume();
+        map.getMapAsync(this);
 
         //리스너 할당
         write.setOnClickListener(v -> {
@@ -167,6 +179,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (helper.isChecked()) {
                 helper.setChecked(true);
                 mom.setChecked(false);
+                map.onCreate(savedInstanceState);
+                map.onResume();
+                map.getMapAsync(this);
+                for (Marker marker : m) {
+                    marker.remove();
+                }
+                if (circle != null) {
+                    circle.remove();
+                }
+                listItemAdapter = new ListItemAdapter();
             } else {
                 helper.setChecked(true);
                 mom.setChecked(false);
@@ -176,6 +198,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (mom.isChecked()) {
                 mom.setChecked(true);
                 helper.setChecked(false);
+                map.onCreate(savedInstanceState);
+                map.onResume();
+                map.getMapAsync(this);
+                for (Marker marker : m) {
+                    marker.remove();
+                }
+                if (circle != null) {
+                    circle.remove();
+                }
+                listItemAdapter = new ListItemAdapter();
             } else {
                 mom.setChecked(true);
                 helper.setChecked(false);
@@ -183,16 +215,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
 
-        //맵 퍼미션
-        if (!isPermission) {
-            callPermission();
-        }
 
-        //맵 초기화
-        map = root.findViewById(R.id.mapView);
-        map.onCreate(savedInstanceState);
-        map.onResume();
-        map.getMapAsync(this);
 
         listSetting();
 
@@ -204,7 +227,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void listSetting() {
 
         mapListView.setOnItemClickListener((parent, view, position, id) -> {
-            Toast.makeText(getContext(), listItemAdapter.getItem(position).getKey() , Toast.LENGTH_LONG).show();
+            if(helper.isChecked()) {
+                Intent intent = new Intent(getContext(), ReadHelperActivity.class);
+                intent.putExtra("key",listItemAdapter.getItem(position).getKey());
+                startActivity(intent);
+            }
+            else {
+                Intent intent = new Intent(getContext(), ReadMomActivity.class);
+                intent.putExtra("key",listItemAdapter.getItem(position).getKey());
+                startActivity(intent);
+            }
         });
         mapListView.setAdapter(listItemAdapter);
     }
@@ -343,10 +375,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             lo1.setLatitude(latitude);
             lo1.setLongitude(longitude);
 
-
+            DatabaseReference databaseRef;
             //파이어베이스 접근중
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference databaseRef = database.getReference("board");
+            if(helper.isChecked()) {
+                databaseRef = database.getReference("board").child("helper");
+            }
+            else{
+                databaseRef = database.getReference("board").child("mom");
+            }
 
             databaseRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -399,8 +436,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         // Updates the location and zoom of the MapView
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14);
-
-        googleMap.animateCamera(cameraUpdate);
+        googleMap.moveCamera(cameraUpdate);
 
     }
 
