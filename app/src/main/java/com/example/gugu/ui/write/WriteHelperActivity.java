@@ -283,7 +283,7 @@ public class WriteHelperActivity extends Activity implements OnMapReadyCallback 
         // Updates the location and zoom of the MapView
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14);
 
-        googleMap.animateCamera(cameraUpdate);
+        googleMap.moveCamera(cameraUpdate);
 
         //googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("루프리코리아"));
 

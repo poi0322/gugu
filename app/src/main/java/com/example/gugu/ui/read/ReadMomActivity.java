@@ -259,7 +259,7 @@ public class ReadMomActivity extends Activity implements OnMapReadyCallback {
         System.out.println(latitude+", "+longitude);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14);
 
-        googleMap.animateCamera(cameraUpdate);
+        googleMap.moveCamera(cameraUpdate);
 
 
     }

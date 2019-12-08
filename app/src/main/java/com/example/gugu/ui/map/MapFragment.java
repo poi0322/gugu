@@ -1,17 +1,10 @@
 package com.example.gugu.ui.map;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,19 +14,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.gugu.DataClass.User;
 import com.example.gugu.DataClass.Write;
 import com.example.gugu.GPSInfo;
-import com.example.gugu.MainActivity;
 import com.example.gugu.R;
 import com.example.gugu.ui.read.ReadHelperActivity;
 import com.example.gugu.ui.read.ReadMomActivity;
@@ -51,8 +44,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,12 +54,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
-import static android.location.LocationManager.GPS_PROVIDER;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -76,6 +64,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     /*맵뷰 변수*/
     private ListView mapListView;
     private MapView map;
+    private GoogleMap googleMap;
+
     /*GPS 변수*/
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
     private final int PERMISSIONS_ACCESS_COARSE_LOCATION = 1001;
@@ -86,6 +76,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GPSInfo gps;
     double latitude;
     double longitude;
+    int distance;
 
     private List<Marker> m;
     private Circle circle;
@@ -101,6 +92,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList ageList;
     private Spinner sex;
     private ArrayList sexList;
+    private SeekBar seekBar;
+    private TextView disIndicator;
+    private TextView category;
 
     //파베
     private FirebaseAuth mAuth;
@@ -123,6 +117,49 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         write = root.findViewById(R.id.map_write);
         helper = root.findViewById(R.id.map_helper);
         mom = root.findViewById(R.id.map_mom);
+        seekBar = root.findViewById(R.id.map_seekbar);
+        disIndicator = root.findViewById(R.id.map_distance);
+        category=root.findViewById(R.id.category);
+
+        seekBar.setMax(4);
+        seekBar.incrementProgressBy(1);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                switch (progress) {
+                    case 0:
+                        distance = 1;
+                        break;
+                    case 1:
+                        distance = 3;
+                        break;
+                    case 2:
+                        distance = 5;
+                        break;
+                    case 3:
+                        distance = 10;
+                        break;
+                    case 4:
+                        distance = 30;
+                        break;
+                }
+                disIndicator.setText("약 "+distance+"km 이내 ");
+                initMap();
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        seekBar.setProgress(2);
 
 
         termList = new ArrayList<>();
@@ -148,8 +185,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         ArrayAdapter<String> ageAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, ageList);
         ArrayAdapter<String> sexAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, sexList);
         term.setAdapter(termAdapter);
-        age.setAdapter(ageAdapter );
-        sex.setAdapter(sexAdapter );
+        age.setAdapter(ageAdapter);
+        sex.setAdapter(sexAdapter);
 
         mAuth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -179,15 +216,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (helper.isChecked()) {
                 helper.setChecked(true);
                 mom.setChecked(false);
-                map.onCreate(savedInstanceState);
-                map.onResume();
-                map.getMapAsync(this);
+                initMap();
                 for (Marker marker : m) {
                     marker.remove();
                 }
                 if (circle != null) {
                     circle.remove();
                 }
+                category.setText( "가까운 활동보조인");
                 listItemAdapter = new ListItemAdapter();
             } else {
                 helper.setChecked(true);
@@ -198,27 +234,55 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (mom.isChecked()) {
                 mom.setChecked(true);
                 helper.setChecked(false);
-                map.onCreate(savedInstanceState);
-                map.onResume();
-                map.getMapAsync(this);
+                initMap();
                 for (Marker marker : m) {
                     marker.remove();
                 }
                 if (circle != null) {
                     circle.remove();
                 }
+                category.setText( "가까운 장애인 / 보호자");
                 listItemAdapter = new ListItemAdapter();
             } else {
                 mom.setChecked(true);
                 helper.setChecked(false);
             }
         });
+        term.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                initMap();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+        age.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                initMap();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        sex.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                initMap();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         listSetting();
-
 
         return root;
     }
@@ -227,14 +291,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void listSetting() {
 
         mapListView.setOnItemClickListener((parent, view, position, id) -> {
-            if(helper.isChecked()) {
+            if (helper.isChecked()) {
                 Intent intent = new Intent(getContext(), ReadHelperActivity.class);
-                intent.putExtra("key",listItemAdapter.getItem(position).getKey());
+                intent.putExtra("key", listItemAdapter.getItem(position).getKey());
                 startActivity(intent);
-            }
-            else {
+            } else {
                 Intent intent = new Intent(getContext(), ReadMomActivity.class);
-                intent.putExtra("key",listItemAdapter.getItem(position).getKey());
+                intent.putExtra("key", listItemAdapter.getItem(position).getKey());
                 startActivity(intent);
             }
         });
@@ -317,8 +380,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 int iage = Integer.parseInt(sdf.format(date)) / 10000 -
                         Integer.parseInt(u.getUserBirth()) / 10000;
                 detail = "이름 : " + u.getUserName() + " / 성별 : " + u.getUserSex() + " / 나이 : " + "만 " + iage + "세";
-                listItemAdapter.addItem(key,getResources().getDrawable(profile),
-                        title, detail,service);
+                boolean skip = true;
+                switch (age.getSelectedItemPosition()) {
+                    case 0:
+                        skip = false;
+                        break;
+                    case 1:
+                        if (20 <= iage && iage < 30)
+                            skip = false;
+                        break;
+                    case 2:
+                        if (30 <= iage && iage < 40)
+                            skip = false;
+                        break;
+                    case 3:
+                        if (40 <= iage && iage < 50)
+                            skip = false;
+                        break;
+                    case 4:
+                        if (50 <= iage && iage < 60)
+                            skip = false;
+                        break;
+                }
+                if (skip)
+                    return;
+                listItemAdapter.addItem(key, getResources().getDrawable(profile),
+                        title, detail, service);
                 listSetting();
 
             }
@@ -332,12 +419,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-
     @Override
     public void onMapReady(final GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        initMap();
+
+    }
+
+
+    private void initMap() {
+
         MapsInitializer.initialize(Objects.requireNonNull(this.getActivity()));
 
+
         m = new ArrayList<>();
+        for (Marker marker : m) {
+            marker.remove();
+        }
+        if (circle != null) {
+            circle.remove();
+        }
+        listItemAdapter = new ListItemAdapter();
 
         if (!isPermission) {
             callPermission();
@@ -354,6 +456,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
 
         googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setScrollGesturesEnabled(true);
 
 
         googleMap.setOnCameraMoveListener(() -> {
@@ -378,10 +481,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             DatabaseReference databaseRef;
             //파이어베이스 접근중
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            if(helper.isChecked()) {
+            if (helper.isChecked()) {
                 databaseRef = database.getReference("board").child("helper");
-            }
-            else{
+            } else {
                 databaseRef = database.getReference("board").child("mom");
             }
 
@@ -389,15 +491,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot board : dataSnapshot.getChildren()) {
-
-                        //파이어베이스에서 읽어온값들을 공유변수에 저장
                         board.getKey();
                         Write w = board.getValue(Write.class);
+
+                        boolean skip = false;
+                        switch (term.getSelectedItemPosition()) {
+                            case 0:
+                                break;
+                            case 1:
+                                if (!w.getTerm().equals("장기"))
+                                    skip = true;
+                                break;
+                            case 2:
+                                if (!w.getTerm().equals("단기"))
+                                    skip = true;
+                                break;
+                        }
+                        switch (sex.getSelectedItemPosition()) {
+                            case 0:
+                                break;
+                            case 1:
+                                if (!w.getTerm().equals("남자"))
+                                    skip = true;
+                                break;
+                            case 2:
+                                if (!w.getTerm().equals("여자"))
+                                    skip = true;
+                                break;
+                        }
+                        if (skip)
+                            continue;
+
+                        //파이어베이스에서 읽어온값들을 공유변수에 저장
                         Location lo2 = new Location("lo2");
                         lo2.setLatitude(w.getLatitude());
                         lo2.setLongitude(w.getLongitude());
-                        if (lo1.distanceTo(lo2) / 1000 < 1) {
-                            realAddItem(board.getKey(),w.getTitle(), w.getUid(), w.getService());
+                        if (lo1.distanceTo(lo2) / 1000 < distance) {
+                            realAddItem(board.getKey(), w.getTitle(), w.getUid(), w.getService());
                             m.add(googleMap.addMarker(new MarkerOptions().position(new LatLng(w.getLatitude(), w.getLongitude())).title(w.getTitle())));
                         }
                     }
@@ -418,7 +548,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 // 반경 1KM원
                 circle = googleMap.addCircle(new CircleOptions().center(new LatLng(latitude, longitude)) //원점
-                        .radius(1000)      //반지름 단위 : m
+                        .radius(1000*distance)      //반지름 단위 : m
                         .strokeWidth(0f)  //선너비 0f : 선없음
                         .fillColor(Color.parseColor("#7ae1f5fe"))); //배경색);
 
@@ -435,9 +565,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         // Updates the location and zoom of the MapView
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14);
-        googleMap.moveCamera(cameraUpdate);
+        int zoom=14;
+        switch (distance){
+            case 1:
+                zoom = 14;
+                break;
+            case 3:
+                zoom = 13;
+                break;
 
+            case 5:
+                zoom = 12;
+                break;
+
+            case 10:
+                zoom = 11;
+                break;
+            case 30:
+                zoom = 9;
+                break;
+
+        }
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom);
+        googleMap.moveCamera(cameraUpdate);
     }
 
     @Override
