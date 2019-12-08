@@ -97,8 +97,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private TextView category;
 
     //파베
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase database;
     private DatabaseReference rootRef;
 
     private ListItemAdapter listItemAdapter;
@@ -110,7 +108,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_map, container, false);
-        mapListView = root.findViewById(R.id.map_list);
+        mapListView = root.findViewById(R.id.like_list);
         listItemAdapter = new ListItemAdapter();
 
         //변수 초기화
@@ -188,7 +186,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         age.setAdapter(ageAdapter);
         sex.setAdapter(sexAdapter);
 
-        mAuth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
 
         //맵 퍼미션

@@ -8,14 +8,11 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +21,6 @@ import androidx.core.content.ContextCompat;
 import com.example.gugu.DataClass.User;
 import com.example.gugu.DataClass.Write;
 import com.example.gugu.GPSInfo;
-import com.example.gugu.MainActivity;
 import com.example.gugu.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,7 +32,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,9 +42,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 public class ReadMomActivity extends Activity implements OnMapReadyCallback {
 
@@ -62,6 +59,8 @@ public class ReadMomActivity extends Activity implements OnMapReadyCallback {
     private TextView term;
     private TextView sex;
     private TextView age;
+
+    private ToggleButton like;
 
     private ImageView active;
     private ImageView bath;
@@ -108,6 +107,47 @@ public class ReadMomActivity extends Activity implements OnMapReadyCallback {
         term = findViewById(R.id.mom_term);
         sex = findViewById(R.id.mom_sex);
         age = findViewById(R.id.mom_age);
+        like = findViewById(R.id.helper_like);
+
+        SharedPreferences lpref = getSharedPreferences("like",MODE_PRIVATE);
+        Set<String> llist;
+        llist = lpref.getStringSet("helper", new HashSet<String>());
+        for (String s : llist) {
+            if (s.equals(key)) {
+                like.setChecked(true);
+                like.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_heart));
+            }
+        }
+
+
+
+        like.setOnClickListener(v -> {
+            if(like.isChecked()){
+                like.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_heart));
+
+                SharedPreferences pref = getSharedPreferences("like",MODE_PRIVATE);
+                Set<String> list;
+                list = pref.getStringSet("mom", new HashSet<String>());
+                list.add(key);
+                System.out.println(list);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putStringSet("mom",list);
+                editor.commit();
+
+            }
+            else {
+                like.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_heart_blank));
+
+                SharedPreferences pref = getSharedPreferences("like",MODE_PRIVATE);
+                Set<String> list;
+                list = pref.getStringSet("mom", new HashSet<String>());
+                list.remove(key);
+
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putStringSet("mom",list);
+                editor.commit();
+            }
+        });
 
         active = findViewById(R.id.active_sup);
         bath = findViewById(R.id.bath_sup);

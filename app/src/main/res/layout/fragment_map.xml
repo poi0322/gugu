@@ -104,7 +104,7 @@
             android:text="가까운 장애인 / 보호자" />
 
         <ListView
-            android:id="@+id/map_list"
+            android:id="@+id/like_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="56dp" />
