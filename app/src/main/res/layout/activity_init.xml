@@ -8,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/init_text2"
+        android:id="@+id/category"
         android:layout_width="380dp"
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"

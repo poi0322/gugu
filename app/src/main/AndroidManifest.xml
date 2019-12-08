@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.gugu">
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.DIAL_PHONE" />
 
 
     <application
@@ -32,15 +35,16 @@
         </activity>
 
         <activity android:name=".RegisterActivity">
-        </activity>
 
+        </activity>
         <activity android:name=".FindIdActivity"></activity>
         <activity android:name=".FindPwActivity"></activity>
         <activity android:name=".ViewIdActivity"></activity>
         <activity android:name=".ViewPwActivity"></activity>
-
         <activity android:name="com.example.gugu.ui.write.WriteMomActivity"></activity>
-
+        <activity android:name="com.example.gugu.ui.write.WriteHelperActivity"></activity>
+        <activity android:name="com.example.gugu.ui.read.ReadMomActivity"></activity>
+        <activity android:name="com.example.gugu.ui.read.ReadHelperActivity"></activity>
         <activity
             android:name="com.example.gugu.MainActivity"
             android:label="@string/app_name">

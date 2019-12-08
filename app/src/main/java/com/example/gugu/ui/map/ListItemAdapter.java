@@ -60,30 +60,56 @@ public class ListItemAdapter extends BaseAdapter {
         listImage.setImageDrawable(mListItem.getListImage());
         listTitle.setText(mListItem.getListTitle());
         listProfile.setText(mListItem.getListProfile());
-        list_active_sup.setImageDrawable(mListItem.getList_active_sup());
-        list_bath_sup.setImageDrawable(mListItem.getList_bath_sup());
-        list_toilet_sup.setImageDrawable(mListItem.getList_toilet_sup());
-        list_clean_sup.setImageDrawable(mListItem.getList_clean_sup());
+        list_active_sup.setImageResource(mListItem.getList_active_sup());
+        list_bath_sup.setImageResource(mListItem.getList_bath_sup());
+        list_toilet_sup.setImageResource(mListItem.getList_toilet_sup());
+        list_clean_sup.setImageResource(mListItem.getList_clean_sup());
 
         /* (위젯에 대한 이벤트리스너를 지정하고 싶다면 여기에 작성하면된다..)  */
         //참고 : https://mailmail.tistory.com/6
         return convertView;
     }
 
-    public void addItem(Drawable listImage, String listTitle, String listProfile,
-                        Drawable list_active_sup, Drawable list_bath_sup,
-                        Drawable list_toilet_sup, Drawable list_clean_sup) {
+    public void addItem(String key,Drawable listImage, String listTitle, String listProfile,
+                        String service) {
+
+        int active;
+        int bath;
+        int toilet;
+        int clean;
 
         MapListItem mListItem = new MapListItem();
 
         //MapListItem에 아이템 세팅하기
+        mListItem.setKey(key);
         mListItem.setListImage(listImage);
         mListItem.setListTitle(listTitle);
         mListItem.setListProfile(listProfile);
-        mListItem.setList_active_sup(list_active_sup);
-        mListItem.setList_bath_sup(list_bath_sup);
-        mListItem.setList_toilet_sup(list_toilet_sup);
-        mListItem.setList_clean_sup(list_clean_sup);
+
+        if ((Integer.valueOf(service, 2) & 8) == 8) {
+            active = R.drawable.ic_active_sup_black;
+        } else {
+            active = R.drawable.ic_active_sup_grey;
+        }
+        if ((Integer.valueOf(service, 2) & 4) == 4) {
+            bath = R.drawable.ic_bath_sup_black;
+        } else {
+            bath = R.drawable.ic_bath_sup_grey;
+        }
+        if ((Integer.valueOf(service, 2) & 2) == 2) {
+            toilet = R.drawable.ic_toilet_sup_black;
+        } else {
+            toilet = R.drawable.ic_toilet_sup_grey;
+        }
+        if ((Integer.valueOf(service, 2) & 1) == 1) {
+            clean = R.drawable.ic_clean_sup_black;
+        } else {
+            clean = R.drawable.ic_clean_sup_grey;
+        }
+        mListItem.setList_active_sup(active);
+        mListItem.setList_bath_sup(bath);
+        mListItem.setList_toilet_sup(toilet);
+        mListItem.setList_clean_sup(clean);
 
         mapListItems.add(mListItem);
     }

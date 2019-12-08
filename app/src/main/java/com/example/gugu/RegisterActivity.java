@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.gugu.DataClass.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -90,24 +91,10 @@ public class RegisterActivity extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            class user{
-                                public String userAddress;
-                                public String userBirth;
-                                public String userName;
-                                public String userNick;
-                                public String userPhone;
-                                public user( String address,String birth ,String name, String nick, String phone){
-                                    this.userAddress= address;
-                                    this.userBirth= birth;
-                                    this.userName= name;
-                                    this.userNick= nick;
-                                    this.userPhone= phone;
-                                }
-                            }
                             FirebaseUser user = mAuth.getCurrentUser();
                             String uid = user.getUid();
                             DatabaseReference usersRef = rootRef.child("users");
-                            usersRef.child(uid).setValue(new user(
+                            usersRef.child(uid).setValue(new User(
                                                         regAddress.getText().toString(),
                                                         regBirth.getText().toString(),
                                                         regName.getText().toString(),

@@ -2,6 +2,7 @@ package com.example.gugu;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,11 +13,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.gugu.DataClass.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends Activity {
 
@@ -28,6 +35,7 @@ public class LoginActivity extends Activity {
     private Button findPw;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference rootRef;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,7 +51,7 @@ public class LoginActivity extends Activity {
         submit=findViewById(R.id.login_submit);
 
         mAuth = FirebaseAuth.getInstance();
-
+        rootRef = FirebaseDatabase.getInstance().getReference();
         loginFunction();
         addHandler();
     }
@@ -68,6 +76,32 @@ public class LoginActivity extends Activity {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    String uid = user.getUid();
+                                    //파이어베이스 접근중
+                                    DatabaseReference usersRef = rootRef.child("users").child(uid);
+                                    usersRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            SharedPreferences pref = getSharedPreferences("user",MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = pref.edit();
+
+                                            //파이어베이스에서 읽어온값들을 공유변수에 저장
+                                            User u = dataSnapshot.getValue(User.class);
+                                            editor.putString("userAddress",u.getUserAddress());
+                                            editor.putString("userBirth",u.getUserBirth());
+                                            editor.putString("userName",u.getUserName());
+                                            editor.putString("userNick",u.getUserNick());
+                                            editor.putString("userPhone",u.getUserPhone());
+                                            editor.putString("userSex",u.getUserSex());
+                                            editor.commit();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(intent);
                                     finish();

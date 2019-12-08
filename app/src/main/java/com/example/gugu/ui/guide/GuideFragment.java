@@ -16,20 +16,11 @@ import com.example.gugu.R;
 
 public class GuideFragment extends Fragment {
 
-    private GuideViewModel guideViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        guideViewModel =
-                ViewModelProviders.of(this).get(GuideViewModel.class);
         View root = inflater.inflate(R.layout.fragment_guide, container, false);
         final TextView textView = root.findViewById(R.id.text_guide);
-        guideViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         return root;
     }
 }

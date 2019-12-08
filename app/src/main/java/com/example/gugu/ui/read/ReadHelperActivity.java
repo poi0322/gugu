@@ -1,10 +1,11 @@
-package com.example.gugu.ui.write;
+package com.example.gugu.ui.read;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -15,7 +16,9 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -35,36 +38,48 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
-public class WriteHelperActivity extends Activity implements OnMapReadyCallback {
-    private EditText title;
+public class ReadHelperActivity extends Activity implements OnMapReadyCallback {
+
+    private String key;
+
+    private TextView title;
     private TextView name;
 
     private TextView location;
-    private Spinner term;
+    private TextView term;
     private TextView sex;
     private TextView age;
+    private ToggleButton like;
 
     private ImageView active;
     private ImageView bath;
     private ImageView toilet;
     private ImageView clean;
 
-    private EditText body;
+    private TextView body;
     private String service;
     private MapView map;
 
-    private Button helper_submit;
+    private Button helper_call;
+    private String phone;
 
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
     private final int PERMISSIONS_ACCESS_COARSE_LOCATION = 1001;
@@ -81,36 +96,79 @@ public class WriteHelperActivity extends Activity implements OnMapReadyCallback 
 
     private FirebaseAuth mAuth;
     private DatabaseReference rootRef;
+    String uid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.write_helper);
+        setContentView(R.layout.read_helper);
+
+        Intent intent =getIntent();
+        key= intent.getStringExtra("key");
 
 
         title = findViewById(R.id.helper_title);
         name = findViewById(R.id.helper_name);
 
         location = findViewById(R.id.helper_location);
-        term = findViewById(R.id.spinner_term);
+        term = findViewById(R.id.helper_term);
         sex = findViewById(R.id.helper_sex);
         age = findViewById(R.id.helper_age);
+        like = findViewById(R.id.helper_like);
 
+        SharedPreferences lpref = getSharedPreferences("like",MODE_PRIVATE);
+        Set<String> llist;
+        llist = lpref.getStringSet("helper", new HashSet<String>());
+        System.out.println(llist);
+
+        like.setChecked(false);
+        like.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_heart_blank));
+        for (String s : llist) {
+            if (s.equals(key)) {
+                like.setChecked(true);
+                like.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_heart));
+                break;
+            }
+        }
+
+
+
+        like.setOnClickListener(v -> {
+            if(like.isChecked()){
+                like.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_heart));
+
+                SharedPreferences pref = getSharedPreferences("like",MODE_PRIVATE);
+                Set<String> list;
+                list = pref.getStringSet("helper", new HashSet<String>());
+                list.add(key);
+                System.out.println(list);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putStringSet("helper",list);
+                editor.commit();
+
+            }
+            else {
+                like.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_heart_blank));
+
+                SharedPreferences pref = getSharedPreferences("like",MODE_PRIVATE);
+                Set<String> list;
+                list = pref.getStringSet("helper", new HashSet<String>());
+                list.remove(key);
+
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putStringSet("helper",list);
+                editor.commit();
+            }
+        });
         active = findViewById(R.id.active_sup);
         bath = findViewById(R.id.bath_sup);
         toilet = findViewById(R.id.toilet_sup);
         clean = findViewById(R.id.clean_sup);
 
         body = findViewById(R.id.helper_body);
-        map = findViewById(R.id.helper_writemap);
+        map = findViewById(R.id.helper_map);
 
-        helper_submit = findViewById(R.id.helper_submit);
-        termList = new ArrayList<>();
-        termList.add("장기");
-        termList.add("단기");
-
-        ArrayAdapter<String> termAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, termList);
-        term.setAdapter(termAdapter);
+        helper_call = findViewById(R.id.helper_call);
 
 
         //맵 초기화 구문
@@ -118,102 +176,88 @@ public class WriteHelperActivity extends Activity implements OnMapReadyCallback 
             callPermission();
         }
 
+
+
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        //리스너 달기
+
+
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference boardRef = rootRef.child("board").child("helper").child(key);
+        boardRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Write w = dataSnapshot.getValue(Write.class);
+
+
+                DatabaseReference usersRef = rootRef.child("users").child(w.getUid());
+                usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User u =dataSnapshot.getValue(User.class);
+                        Date date = new Date();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                        int iage = Integer.parseInt(sdf.format(date)) / 10000 - Integer.parseInt(u.getUserBirth()) / 10000;
+                        name.setText(u.getUserName());
+                        age.setText("만 " + iage + "세");
+                        sex.setText(u.getUserSex());
+                        phone = u.getUserPhone();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                service = w.getService();
+                if ((Integer.valueOf(service, 2) & 8) == 8) {
+                    active.setImageResource(R.drawable.ic_active_sup_black);
+                } else {
+                    active.setImageResource(R.drawable.ic_active_sup_grey);
+                }
+                if ((Integer.valueOf(service, 2) & 4) == 4) {
+                    bath.setImageResource(R.drawable.ic_bath_sup_black);
+                } else {
+                    bath.setImageResource(R.drawable.ic_bath_sup_grey);
+                }
+                if ((Integer.valueOf(service, 2) & 2) == 2) {
+                    toilet.setImageResource(R.drawable.ic_toilet_sup_black);
+                } else {
+                    toilet.setImageResource(R.drawable.ic_toilet_sup_grey);
+                }
+                if ((Integer.valueOf(service, 2) & 1) == 1) {
+                    clean.setImageResource(R.drawable.ic_clean_sup_black);
+                } else {
+                    clean.setImageResource(R.drawable.ic_clean_sup_grey);
+                }
+
+                title.setText(w.getTitle());
+                term.setText(w.getTerm());
+                body.setText(w.getBody());
+                latitude = w.getLatitude();
+                longitude = w.getLongitude();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         map.onCreate(savedInstanceState);
         map.onResume();
         map.getMapAsync(this);
 
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        System.out.println("현재날짜 : " + sdf.format(date));
 
-
-        //쉐어드 프리퍼런스 가져와서 정보넣기
-        SharedPreferences pref = this.getSharedPreferences("user", MODE_PRIVATE);
-        name.setText(pref.getString("userName", ""));
-        sex.setText(pref.getString("userSex", ""));
-        location.setText(pref.getString("userAddress", ""));
-        sex.setText(pref.getString("userSex", ""));
-        int iage = Integer.parseInt(sdf.format(date)) / 10000 -
-                Integer.parseInt(pref.getString("userBirth", "")) / 10000;
-        age.setText("만 " + iage + "세");
-
-
-        //리스너 달기
-        imageOnClickListener();
-
-
-        // 글 써서 파이어베이스에 집어넣기
-        mAuth = FirebaseAuth.getInstance();
-        rootRef = FirebaseDatabase.getInstance().getReference();
-        submitOnClickListener();
-    }
-
-    private void imageOnClickListener() {
-        service = Integer.toBinaryString(0000);
-
-        active.setOnClickListener((v) -> {
-            if ((Integer.valueOf(service, 2) & 8) == 8) {
-                active.setImageResource(R.drawable.ic_active_sup_grey);
-                service = Integer.toBinaryString(Integer.valueOf(service, 2) & ~8);
-            } else {
-                active.setImageResource(R.drawable.ic_active_sup_black);
-                service = Integer.toBinaryString(Integer.valueOf(service, 2) | 8);
-            }
-        });
-        bath.setOnClickListener((v) -> {
-            if ((Integer.valueOf(service, 2) & 4) == 4) {
-                bath.setImageResource(R.drawable.ic_bath_sup_grey);
-                service = Integer.toBinaryString(Integer.valueOf(service, 2) & ~4);
-            } else {
-                bath.setImageResource(R.drawable.ic_bath_sup_black);
-                service = Integer.toBinaryString(Integer.valueOf(service, 2) | 4);
-            }
-        });
-        toilet.setOnClickListener((v) -> {
-            if ((Integer.valueOf(service, 2) & 2) == 2) {
-                toilet.setImageResource(R.drawable.ic_toilet_sup_grey);
-                service = Integer.toBinaryString(Integer.valueOf(service, 2) & ~2);
-            } else {
-                toilet.setImageResource(R.drawable.ic_toilet_sup_black);
-                service = Integer.toBinaryString(Integer.valueOf(service, 2) | 2);
-            }
-        });
-        clean.setOnClickListener((v) -> {
-            if ((Integer.valueOf(service, 2) & 1) == 1) {
-                clean.setImageResource(R.drawable.ic_clean_sup_grey);
-                service = Integer.toBinaryString(Integer.valueOf(service, 2) & ~1);
-            } else {
-                clean.setImageResource(R.drawable.ic_clean_sup_black);
-                service = Integer.toBinaryString(Integer.valueOf(service, 2) | 1);
-            }
-        });
-
-    }
-
-    private void submitOnClickListener() {
-        helper_submit.setOnClickListener((v) -> {
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-
-
-            SharedPreferences pref = this.getSharedPreferences("user", MODE_PRIVATE);
-            name.setText(pref.getString("userName", ""));
-            FirebaseUser user = mAuth.getCurrentUser();
-            String uid = user.getUid();
-            DatabaseReference usersRef = rootRef.child("board").child("helper");
-            usersRef.push().setValue(new Write(
-                    "활동보조인", latitude, longitude,
-                    term.getSelectedItem().toString(),
-                    title.getText().toString(),
-                    uid, sdf.format(date), service,
-                    body.getText().toString()
-            ));
-
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+        helper_call.setOnClickListener(v -> {
+            startActivity( new Intent("android.intent.action.DIAL", Uri.parse("tel:"+phone)));
 
         });
     }
+
 
     @Override
     public void onResume() {
@@ -244,53 +288,34 @@ public class WriteHelperActivity extends Activity implements OnMapReadyCallback 
             callPermission();
             return;
         }
-
-        gps = new GPSInfo(this);
-
-        if (gps.isGetLocation()) {
-            latitude = gps.getLatitude();
-            longitude = gps.getLongitude();
-        } else {
-            gps.showSettingsAlert();
-        }
-
         googleMap.setMyLocationEnabled(true);
-        googleMap.setOnCameraMoveListener(() -> {
-            for (Marker marker : m) {
-                marker.remove();
-            }
-        });
-        googleMap.setOnCameraIdleListener(() -> {
-            LatLng latLng = googleMap.getCameraPosition().target;
-            latitude = latLng.latitude;
-            longitude = latLng.longitude;
+
 
             //이건 현재 좌표
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            String address;
+            String address = "";
             try {
                 address = geocoder.getFromLocation(latitude, longitude, 1).get(0).getAddressLine(0);
+                location.setText(address);
                 m.add(googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(address)));
-            } catch (IOException | NullPointerException ioException) {
+            } catch (IOException | NullPointerException | IndexOutOfBoundsException ioException ) {
                 //네트워크 문제
                 Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
             } catch (IllegalArgumentException illegalArgumentException) {
                 Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
             }
-        });
 
 
         // Updates the location and zoom of the MapView
+        System.out.println(latitude+", "+longitude);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14);
 
         googleMap.moveCamera(cameraUpdate);
 
-        //googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("루프리코리아"));
 
     }
 
     @Override
-
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSIONS_ACCESS_FINE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             isAccessFineLocation = true;
