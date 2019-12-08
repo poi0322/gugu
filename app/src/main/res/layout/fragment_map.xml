@@ -17,22 +17,26 @@
         android:layout_marginBottom="12dp"
         android:orientation="horizontal">
 
-        <Button
+        <ToggleButton
             android:id="@+id/map_helper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="활동보조인" />
+            android:checked="true"
+            android:textOff="활동보조인"
+            android:textOn="활동보조인" />
 
-        <Button
+        <ToggleButton
             android:id="@+id/map_mom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="보호자" />
+            android:text="보호자"
+            android:textOff="보호자"
+            android:textOn="보호자" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/map_write"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:adjustViewBounds="true"
@@ -52,26 +56,17 @@
             android:orientation="horizontal">
 
             <Spinner
-                android:id="@+id/map_location"
-                android:layout_weight="1" />
-
-            <Spinner
                 android:id="@+id/map_term"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Spinner
-                android:id="@+id/map_sex"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <Spinner
                 android:id="@+id/map_age"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/map_sex"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
         </TableRow>
 
@@ -90,7 +85,7 @@
             android:apiKey="AIzaSyAPOxUBu3li48f9p3iWmMs_gEWFPyWyjto" />
 
         <SeekBar
-            android:id="@+id/seekBar2"
+            android:id="@+id/map_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
