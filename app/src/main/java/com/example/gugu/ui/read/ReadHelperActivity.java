@@ -119,10 +119,15 @@ public class ReadHelperActivity extends Activity implements OnMapReadyCallback {
         SharedPreferences lpref = getSharedPreferences("like",MODE_PRIVATE);
         Set<String> llist;
         llist = lpref.getStringSet("helper", new HashSet<String>());
+        System.out.println(llist);
+
+        like.setChecked(false);
+        like.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_heart_blank));
         for (String s : llist) {
             if (s.equals(key)) {
                 like.setChecked(true);
                 like.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_heart));
+                break;
             }
         }
 
