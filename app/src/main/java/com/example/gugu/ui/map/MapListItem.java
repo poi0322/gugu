@@ -12,9 +12,7 @@ public class MapListItem {
     private int list_toilet_sup;
     private int list_clean_sup;
 
-    public Drawable getListImage() {
-        return listImage;
-    }
+    public Drawable getListImage() { return listImage; }
 
     public void setListImage(Drawable listImage) { this.listImage = listImage; }
 

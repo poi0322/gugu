@@ -111,6 +111,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapListView = root.findViewById(R.id.like_list);
         listItemAdapter = new ListItemAdapter();
 
+
+
         //변수 초기화
         write = root.findViewById(R.id.map_write);
         helper = root.findViewById(R.id.map_helper);

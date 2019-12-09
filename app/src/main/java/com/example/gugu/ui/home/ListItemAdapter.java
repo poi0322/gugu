@@ -1,32 +1,31 @@
 package com.example.gugu.ui.home;
 
-
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.gugu.R;
+import com.example.gugu.ui.map.MapListItem;
 
 import java.util.ArrayList;
 
 public class ListItemAdapter extends BaseAdapter {
 
-    private ArrayList<HomeListItem> homeListItems = new ArrayList<>();
+    private ArrayList<NoticeListItem> noticeListItems = new ArrayList<>();
 
     @Override
-    public int getCount() {
-        return homeListItems.size();
-    }
+    public int getCount() {return noticeListItems.size(); }
 
     @Override
-    public HomeListItem getItem(int position) {
-        return homeListItems.get(position);
+    public NoticeListItem getItem(int position) {
+        return noticeListItems.get(position);
     }
 
     @Override
@@ -34,44 +33,38 @@ public class ListItemAdapter extends BaseAdapter {
         return 0;
     }
 
+
+
+
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View mview, ViewGroup parent) {
         Context context = parent.getContext();
 
-
-        /* 'listview_custom' Layout을 inflate하여 convertView 참조 획득 */
-        if (convertView == null) {
+        if (mview == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.home_llistitem, parent, false);
+            mview = inflater.inflate(R.layout.home_llistitem, parent, false);
         }
+        ImageView noticeimage = (ImageView)mview.findViewById((R.id.noticeimage));
+        TextView noticetext = (TextView)mview.findViewById((R.id.noticetitle));
 
-        /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
-        ImageView noticeimage = (ImageView) convertView.findViewById(R.id.noticeimage);
-        TextView noticetitle = (TextView) convertView.findViewById(R.id.listTitle);
+        NoticeListItem nListitem = getItem(position);
 
-
-
-        /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
-        HomeListItem mListItem = getItem(position);
-
-        /* 각 위젯에 세팅된 아이템을 뿌려준다 */
-        noticeimage.setImageDrawable(mListItem.getNoticeImage());
-        noticetitle.setText(mListItem.getNoticeTitle());
-
-
-        /* (위젯에 대한 이벤트리스너를 지정하고 싶다면 여기에 작성하면된다..)  */
-        //참고 : https://mailmail.tistory.com/6
-        return convertView;
+        noticeimage.setImageDrawable(nListitem.getNoticeImage());
+        noticetext.setText(nListitem.getNoitceTitle());
+        return mview;
     }
 
-    public void addItem(Drawable noticeimage, String listTitle) {
+    public void addItem(Drawable noticeimage, String noticetitle) {
+        int image = R.drawable.santa;
+        int title = R.string.app_name;
 
-        HomeListItem mListItem = new HomeListItem();
+        NoticeListItem nListItem = new NoticeListItem();
 
-        //HomeListItem에 아이템 세팅하기
-        mListItem.setNoticeImage(noticeimage);
-        mListItem.setNoticeTitle(listTitle);
+        nListItem.setNoticeImage(noticeimage);
+        nListItem.setNoticeTitle(noticetitle);
 
-        homeListItems.add(mListItem);
+
+        noticeListItems.add(nListItem);
     }
 }
