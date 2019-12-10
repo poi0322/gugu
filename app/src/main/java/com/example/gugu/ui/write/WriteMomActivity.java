@@ -131,8 +131,6 @@ public class WriteMomActivity extends Activity implements OnMapReadyCallback {
         SharedPreferences pref = this.getSharedPreferences("user", MODE_PRIVATE);
         name.setText(pref.getString("userName", ""));
         sex.setText(pref.getString("userSex", ""));
-        location.setText(pref.getString("userAddress", ""));
-        sex.setText(pref.getString("userSex", ""));
         int iage = Integer.parseInt(sdf.format(date)) / 10000 -
                 Integer.parseInt(pref.getString("userBirth", "")) / 10000;
         age.setText("만 " + iage + "세");
@@ -271,6 +269,7 @@ public class WriteMomActivity extends Activity implements OnMapReadyCallback {
             try {
                 address = geocoder.getFromLocation(latitude, longitude, 1).get(0).getAddressLine(0);
                 m.add(googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(address)));
+                location.setText(address);
             } catch (IOException | NullPointerException ioException) {
                 //네트워크 문제
                 Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();

@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="가까운 장애인 / 보호자" />
+            android:text="가까운 활동보조인" />
 
         <ListView
             android:id="@+id/like_list"
