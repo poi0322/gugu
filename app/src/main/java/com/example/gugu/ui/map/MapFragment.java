@@ -65,6 +65,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private ListView mapListView;
     private MapView map;
     private GoogleMap googleMap;
+    private boolean mapcontrol;
 
     /*GPS 변수*/
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
@@ -145,6 +146,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         break;
                 }
                 disIndicator.setText("약 "+distance+"km 이내 ");
+                if (circle != null) {
+                    circle.remove();
+                }
                 initMap();
 
             }
@@ -420,6 +424,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
+        this.mapcontrol = true;
         this.googleMap = googleMap;
         initMap();
 
@@ -459,6 +464,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
         googleMap.setOnCameraMoveListener(() -> {
+            this.mapcontrol = true;
             for (Marker marker : m) {
                 marker.remove();
             }
@@ -468,6 +474,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             listItemAdapter = new ListItemAdapter();
         });
         googleMap.setOnCameraIdleListener(() -> {
+            if(this.mapcontrol == true){
+                this.mapcontrol = false;
+            }else {
+                return;
+            }
             listSetting();
             LatLng latLng = googleMap.getCameraPosition().target;
             latitude = latLng.latitude;
