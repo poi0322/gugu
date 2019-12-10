@@ -9,23 +9,24 @@
     <TextView
         android:id="@+id/home_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:text="활동구구"
         android:textSize="50dp" />
+
 
     <TextView
         android:id="@+id/home_notice"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_marginTop="10dp"
         android:text="공지사항"
         android:textSize="20dp" />
 
-
     <ListView
         android:id="@+id/notice_list"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ></ListView>
+        android:layout_height="wrap_content">
+
+    </ListView>
 
 </LinearLayout>

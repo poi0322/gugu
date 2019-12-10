@@ -7,13 +7,13 @@ public class NoticeListItem {
     private String noticetitle;
 
 
-    public Drawable getNoticeImage() { return noticeimage; }
+    public Drawable getNoticeImage() { return this.noticeimage; }
 
-    public void setNoticeImage(Drawable noticeImage) { this.noticeimage = noticeImage; }
+    public void setNoticeImage(Drawable noticeImage) { noticeimage = noticeImage; }
 
-    public String getNoitceTitle() { return noticetitle; }
+    public String getNoitceTitle() { return this.noticetitle; }
 
-    public void setNoticeTitle(String noticetitle) {
-        this.noticetitle = noticetitle;
+    public void setNoticeTitle(String noticet) {
+        noticetitle = noticet;
     }
 }

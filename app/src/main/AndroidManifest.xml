@@ -41,6 +41,7 @@
         <activity android:name=".FindPwActivity"></activity>
         <activity android:name=".ViewIdActivity"></activity>
         <activity android:name=".ViewPwActivity"></activity>
+        <activity android:name=".ui.home.notice_test"></activity>
         <activity android:name="com.example.gugu.ui.write.WriteMomActivity"></activity>
         <activity android:name="com.example.gugu.ui.write.WriteHelperActivity"></activity>
         <activity android:name="com.example.gugu.ui.read.ReadMomActivity"></activity>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="어플 사용 안내"
+        android:textSize="30dp"
+        android:background="#aaaaaa"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="글쓴이 : 관리자"
+        android:textSize="20dp"
+        android:gravity="right"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="활동 보조인과 장애인 보호자가 소통할 수 있는 활동구구 입니다. \n‘홈’에서는 중요한 공지사항을 확인할 수 있습니다.\n‘관심목록’에서는 회원이 관심등록을 해 놓은 게시물을 모아서 볼 수 있습니다.\n‘지도’에서는 주변지역의 활동보조인이나 보호자를 빠르게 확인 할 수 있습니다. 또한 조건 설정도 가능합니다.  \n‘활동 가이드’는 활동보조인과 보호자가 장애인을 케어할 때 간단하게 사용할 수 있는 전략과 돌발 상황에 대처할 수 있는 방법을 담고 있습니다.\n‘더보기’에서는 알림, 내가 쓴 글, 연락한 목록을 확인할 수 있으며 구인/구직에서는 나의 경력 등의 정보를 저장할 수 있습니다. 또한 회원정보수정,회원탈퇴를 진행할 수 있고 , 1:! 문의 및 FAQ를 확인 할 수 있습니다."
+        android:textSize="20dp"
+        android:paddingTop="70dp"/>
+
+</LinearLayout>

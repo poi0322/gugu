@@ -18,10 +18,30 @@ import java.util.ArrayList;
 
 public class ListItemAdapter extends BaseAdapter {
 
-    private ArrayList<NoticeListItem> noticeListItems = new ArrayList<>();
+    private ArrayList<NoticeListItem> noticeListItems = new ArrayList<NoticeListItem>();
 
+    public ListItemAdapter(){};
     @Override
     public int getCount() {return noticeListItems.size(); }
+
+    @Override
+    public View getView(int position, View nview, ViewGroup parent) {
+        final int pos = position;
+        final Context context = parent.getContext();
+
+        if (nview == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            nview = inflater.inflate(R.layout.home_llistitem, parent, false);
+        }
+        ImageView noticeimage = (ImageView)nview.findViewById((R.id.noticeimage));
+        TextView noticetext = (TextView)nview.findViewById((R.id.noticetitle));
+
+        NoticeListItem nListitem = noticeListItems.get(position);
+
+        noticeimage.setImageDrawable(nListitem.getNoticeImage());
+        noticetext.setText(nListitem.getNoitceTitle());
+        return nview;
+    }
 
     @Override
     public NoticeListItem getItem(int position) {
@@ -34,36 +54,11 @@ public class ListItemAdapter extends BaseAdapter {
     }
 
 
-
-
-
-    @Override
-    public View getView(int position, View mview, ViewGroup parent) {
-        Context context = parent.getContext();
-
-        if (mview == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mview = inflater.inflate(R.layout.home_llistitem, parent, false);
-        }
-        ImageView noticeimage = (ImageView)mview.findViewById((R.id.noticeimage));
-        TextView noticetext = (TextView)mview.findViewById((R.id.noticetitle));
-
-        NoticeListItem nListitem = getItem(position);
-
-        noticeimage.setImageDrawable(nListitem.getNoticeImage());
-        noticetext.setText(nListitem.getNoitceTitle());
-        return mview;
-    }
-
     public void addItem(Drawable noticeimage, String noticetitle) {
-        int image = R.drawable.santa;
-        int title = R.string.app_name;
-
         NoticeListItem nListItem = new NoticeListItem();
 
         nListItem.setNoticeImage(noticeimage);
         nListItem.setNoticeTitle(noticetitle);
-
 
         noticeListItems.add(nListItem);
     }
